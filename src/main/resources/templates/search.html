@@ -20,7 +20,7 @@
                         name="searchType"
                         th:id="${column.key}"
                         th:value="${column.key}"
-                        th:checked="${column.key == 'all'}"/>
+                        th:checked="${column.key == prevSelect}"/>
                 <label th:for="${column.key}" th:text="${column.value}"></label>
             </span>
 
@@ -34,9 +34,18 @@
         <input type="submit" value="Search" />
     </form>
 
+    <p th:if="${noSearch}">Please provide a search term.</p>
+
     <hr />
 
     <!-- TODO #2 - Loop over jobs map to display all job fields -->
+
+    <table th:fragment="list-table" class="job-listing" th:each="job : ${jobs}">
+        <tr th:each="column : ${job.keySet()}">
+            <th th:text="${#strings.capitalizeWords(column)}"></th>
+            <td th:inline="text"><a th:unless="${column.equals('name')}" th:href="@{/list/jobs(column=${column},value=${job.get(column)})}" th:text="${job.get(column)}">[[${job.get(column)}]]</a><div th:if="${column.equals('name')}">[[${job.get(column)}]]</div></td>
+        </tr>
+    </table>
 
 </div>
 
